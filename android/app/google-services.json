@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "955950982695",
+    "project_id": "todo-app-c9-sun-3-50da0",
+    "storage_bucket": "todo-app-c9-sun-3-50da0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:955950982695:android:4342c7b05364a4f47f9002",
+        "android_client_info": {
+          "package_name": "com.example.facebook"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGkI-KLSYHMynnFoUtggs3iVPW4v-qOMk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
