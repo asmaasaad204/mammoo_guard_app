@@ -2,12 +2,11 @@ import 'package:facebook/auth/components/custom_text_form_field.dart';
 import 'package:facebook/auth/login/login_screen.dart';
 import 'package:facebook/dialog_utils.dart';
 import 'package:facebook/firebase_utils.dart';
-import 'package:facebook/home/home_screen.dart';
-import 'package:facebook/home/providers/auth_provider.dart';
 import 'package:facebook/models/my_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+
+import '../../home/home_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   static const String routeName = 'register screen';
@@ -19,45 +18,63 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  var nameController = TextEditingController(text: 'Asmaa');
-
-  var emailController = TextEditingController(text: 'saadasmaa204@gmail.com');
-
-  var passwordController = TextEditingController(text: '123456');
-
-  var confirmPasswordController = TextEditingController(text: '123456');
-
+  var nameController = TextEditingController(text: "");
+  var emailController = TextEditingController(text: '');
+  var passwordController = TextEditingController(text: '');
+  var addressController = TextEditingController(text: '');
   var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(235),
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          scrolledUnderElevation: 20,
+          flexibleSpace: Container(
+            child: Stack(
+              children: [
+                Image.asset(
+                  "assets/images/photo_loginRegister.jpg",
+                  fit: BoxFit.cover,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 120, right: 120, left: 20),
+                  child: Image.asset(
+                    "assets/images/photo_logoGuuard2.jpg",
+                    width: 200,
+                    height: 100,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Stack(
         children: [
-          Image.asset(
-            'assets/images/main_background.png',
-            width: double.infinity,
-            fit: BoxFit.fill,
-          ),
           Form(
             key: formKey,
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.3),
                   CustomTextFormField(
-                    label: 'User Name',
+                    label: 'Full Name',
                     controller: nameController,
                     validator: (text) {
                       if (text == null || text.trim().isEmpty) {
-                        return 'Please enter User Name';
+                        return 'Please enter Full Name';
                       }
                       return null;
                     },
                   ),
                   CustomTextFormField(
-                    label: 'Email Address',
+                    label: 'Email',
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
                     validator: (text) {
@@ -69,6 +86,17 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           .hasMatch(text);
                       if (!emailValid) {
                         return 'Please enter a valid Email';
+                      }
+                      return null;
+                    },
+                  ),
+                  CustomTextFormField(
+                    label: 'Address',
+                    keyboardType: TextInputType.text,
+                    controller: addressController,
+                    validator: (text) {
+                      if (text == null || text.trim().isEmpty) {
+                        return 'Please enter your address';
                       }
                       return null;
                     },
@@ -88,47 +116,54 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       return null;
                     },
                   ),
-                  CustomTextFormField(
-                    label: 'Confirm Password',
-                    keyboardType: TextInputType.number,
-                    controller: confirmPasswordController,
-                    obscureText: true,
-                    validator: (text) {
-                      if (text == null || text.trim().isEmpty) {
-                        return 'Please enter Confirm Password';
-                      }
-                      if (text != passwordController.text) {
-                        return "Password doesn't match.";
-                      }
-                      return null;
-                    },
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: MaterialButton(
+                      elevation: 5.0,
+                      color: Color(0xffF8CAE4),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 17, horizontal: 155),
+                      shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
                       ),
                       onPressed: () {
                         register();
                       },
-                      child: Text(
-                        'Register',
-                        style: Theme.of(context).textTheme.titleLarge,
+                      child: const Text(
+                        'Sign Up',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                  TextButton(
-                    onPressed: () {
-                      ///navigate to login screen
-                      Navigator.of(context).pushNamed(LoginScreen.routeName);
-                    },
-                    child: Text(
-                      'Already have an account',
-                      style: Theme.of(context).textTheme.titleMedium!.copyWith(
-                            color: Theme.of(context).primaryColor,
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Already have an Account?',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 22),
+                            textAlign: TextAlign.center,
                           ),
-                    ),
+                          TextButton(
+                            onPressed: () {
+                              ///navigate to register
+                              Navigator.of(context)
+                                  .pushNamed(LoginScreen.routeName);
+                            },
+                            child: Text('Login',
+                                style: TextStyle(
+                                    color: Color(0xffe13495),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ]),
                   ),
                 ],
               ),
@@ -156,8 +191,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           email: emailController.text,
         );
         await FirebaseUtils.addUserToFireStore(myUser);
-        var authProvider = Provider.of<AuthProvider>(context, listen: false);
-        authProvider.updateUser(myUser);
 
         ///todo : hide loading
         DialogUtils.hideLoading(context);

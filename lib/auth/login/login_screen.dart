@@ -1,13 +1,11 @@
 import 'package:facebook/auth/components/custom_text_form_field.dart';
 import 'package:facebook/auth/register/register_screen.dart';
-import 'package:facebook/firebase_utils.dart';
-import 'package:facebook/home/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
 import '../../dialog_utils.dart';
-import '../../home/providers/auth_provider.dart';
+import '../../firebase_utils.dart';
+import '../../home/home_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String routeName = 'login screen';
@@ -19,31 +17,51 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  var emailController = TextEditingController(text: 'saadasmaa204@gmail.com');
-
-  var passwordController = TextEditingController(text: '123456');
-
+  var emailController = TextEditingController(text: '');
+  var passwordController = TextEditingController(text: '');
   var formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(300),
+        child: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+          scrolledUnderElevation: 20,
+          flexibleSpace: Container(
+            child: Stack(
+              children: [
+                Image.asset(
+                  "assets/images/photo_logiin9.jpg",
+                  fit: BoxFit.cover,
+                ),
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 120, right: 120, left: 20),
+                  child: Image.asset(
+                    "assets/images/photo_logoGuuard2.jpg",
+                    width: 200,
+                    height: 100,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
       body: Stack(
         children: [
-          Image.asset(
-            'assets/images/main_background.png',
-            width: double.infinity,
-            fit: BoxFit.fill,
-          ),
           Form(
             key: formKey,
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SizedBox(height: MediaQuery.of(context).size.height * 0.4),
                   CustomTextFormField(
-                    label: 'Email Address',
+                    label: 'Email ',
                     keyboardType: TextInputType.emailAddress,
                     controller: emailController,
                     validator: (text) {
@@ -60,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   CustomTextFormField(
-                    label: 'Password',
+                    label: "Password",
                     keyboardType: TextInputType.number,
                     controller: passwordController,
                     obscureText: true,
@@ -76,39 +94,53 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 15),
+                    child: MaterialButton(
+                      elevation: 5.0,
+                      color: Color(0xffF8CAE4),
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 17, horizontal: 165),
+                      shape: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: BorderSide.none,
                       ),
                       onPressed: () {
                         login();
                       },
-                      child: Text(
+                      child: const Text(
                         'Login',
-                        style: Theme.of(context).textTheme.titleLarge,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Text(
-                      "Don't have an account?",
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        ///navigate to register
-                        Navigator.of(context)
-                            .pushNamed(RegisterScreen.routeName);
-                      },
-                      child: Text(
-                        'SignUp',
-                        style:
-                            Theme.of(context).textTheme.titleMedium!.copyWith(
-                                  color: Theme.of(context).primaryColor,
-                                ),
-                      ),
-                    ),
-                  ]),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 150),
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Create New Account?',
+                            style:
+                                TextStyle(color: Colors.black54, fontSize: 22),
+                            textAlign: TextAlign.center,
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              ///navigate to register
+                              Navigator.of(context)
+                                  .pushNamed(RegisterScreen.routeName);
+                            },
+                            child: Text('Sign Up',
+                                style: TextStyle(
+                                    color: Color(0xffe13495),
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                        ]),
+                  ),
                 ],
               ),
             ),
@@ -133,13 +165,11 @@ class _LoginScreenState extends State<LoginScreen> {
         if (user == null) {
           return;
         }
-        var authProvider = Provider.of<AuthProvider>(context, listen: false);
-        authProvider.updateUser(user);
 
-        ///todo : hide loading
+        ///mammoGaurd : hide loading
         DialogUtils.hideLoading(context);
 
-        ///todo : show messege
+        ///mammoGaurd : show messege
         DialogUtils.showMessage(context, 'Login Successfully',
             title: 'Success', posActionName: 'OK', posAction: () {
           Navigator.of(context).pushReplacementNamed(HomeScreen.routeName);
@@ -147,28 +177,28 @@ class _LoginScreenState extends State<LoginScreen> {
         print(credential.user?.uid ?? '');
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
-          ///todo : hide loading
+          ///mammoGaurd : hide loading
           DialogUtils.hideLoading(context);
 
-          ///todo : show messege
+          ///mammoGaurd : show messege
           DialogUtils.showMessage(context, 'No user found for that email.',
               title: 'Error', posActionName: 'OK');
           print('No user found for that email.');
         } else if (e.code == 'wrong-password') {
-          ///todo : hide loading
+          ///mammoGaurd : hide loading
           DialogUtils.hideLoading(context);
 
-          ///todo : show messege
+          ///mammoGaurd : show messege
           DialogUtils.showMessage(
               context, 'Wrong password provided for that user.',
               title: 'Error', posActionName: 'OK');
           print('Wrong password provided for that user.');
         }
       } catch (e) {
-        ///todo : hide loading
+        ///mammoGaurd : hide loading
         DialogUtils.hideLoading(context);
 
-        ///todo : show messege
+        ///mammoGaurd : show messege
         DialogUtils.showMessage(
           context,
           e.toString(),

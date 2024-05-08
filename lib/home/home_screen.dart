@@ -1,16 +1,11 @@
-import 'package:facebook/auth/login/login_screen.dart';
-import 'package:facebook/home/providers/auth_provider.dart';
-import 'package:facebook/home/providers/list_provider.dart';
-import 'package:facebook/home/task_list/add_task_bottom_sheet.dart';
-import 'package:facebook/home/task_list/task_list_tab.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-import 'package:provider/provider.dart';
+
+import '../taps/SignsTab.dart';
+import '../taps/home_tap.dart';
+import '../taps/pages_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   static const String routeName = 'home screen';
-
-  const HomeScreen({super.key});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -21,67 +16,50 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var authProvider = Provider.of<AuthProvider>(context);
-    var listProvider = Provider.of<ListProvider>(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'TO DO List  ${authProvider.currentUser!.name}',
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                listProvider.tasksList = [];
-                authProvider.currentUser = null;
-                Navigator.pushReplacementNamed(context, LoginScreen.routeName);
-              },
-              icon: const Icon(Icons.logout)),
-        ],
-      ),
-      bottomNavigationBar: BottomAppBar(
-        shape: const CircularNotchedRectangle(),
-        notchMargin: 8,
-        child: BottomNavigationBar(
-          currentIndex: selectedIndex,
-          onTap: (index) {
-            selectedIndex = index;
-            setState(() {});
-          },
-          items: [
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.list),
-              label: AppLocalizations.of(context)!.task_list,
-            ),
-            BottomNavigationBarItem(
-              icon: const Icon(Icons.settings),
-              label: AppLocalizations.of(context)!.settings,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showAddTaskBottomSheet();
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: selectedIndex,
+        selectedItemColor: Color(0xffe13495),
+        onTap: (index) {
+          selectedIndex = index;
+          setState(() {});
         },
-        child: const Icon(
-          Icons.add,
-          size: 35,
-        ),
+        items: [
+          BottomNavigationBarItem(
+            activeIcon: Icon(Icons.home, color: Color(0xffe13495)),
+            icon: Icon(
+              Icons.home,
+              color: Colors.grey,
+            ),
+            label: 'Home',
+            backgroundColor: Color(0xffccbbc1),
+          ),
+          BottomNavigationBarItem(
+              activeIcon:
+                  Icon(Icons.sim_card_alert_sharp, color: Color(0xffe13495)),
+              icon: Icon(
+                Icons.sim_card_alert_sharp,
+                color: Colors.grey,
+              ),
+              label: 'Signs'),
+          BottomNavigationBarItem(
+              activeIcon: Icon(Icons.list_sharp, color: Color(0xffe13495)),
+              icon: Icon(
+                Icons.list_sharp,
+                color: Colors.grey,
+              ),
+              label: 'Pages'),
+        ],
+        selectedLabelStyle: TextStyle(color: Color(0xffe13495)),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      backgroundColor: Colors.white,
       body: tabs[selectedIndex],
     );
   }
 
   List<Widget> tabs = [
-    const TaskListTab(),
+    HomeTap(),
+    SignsTab(),
+    PagesScreen(),
   ];
-
-  void showAddTaskBottomSheet() {
-    showModalBottomSheet(
-      context: context,
-      builder: (context) => const AddTaskBottomSheet(),
-    );
-  }
 }
