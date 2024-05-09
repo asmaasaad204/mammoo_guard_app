@@ -1,7 +1,7 @@
 import 'package:facebook/screens/problem_screen.dart';
 import 'package:flutter/material.dart';
 
-import 'contactUs_screen.dart';
+import '../Chat/chat_screen.dart';
 
 class GetHelp extends StatelessWidget {
   static const String routeName = 'get help';
@@ -106,7 +106,7 @@ class GetHelp extends StatelessWidget {
                     borderSide: BorderSide.none,
                   ),
                   onPressed: () {
-                    Navigator.of(context).pushNamed(ContactUsScreen.routeName);
+                    Navigator.of(context).pushNamed(ChatScreen.routeName);
                   },
                   child: Icon(
                     Icons.arrow_forward,

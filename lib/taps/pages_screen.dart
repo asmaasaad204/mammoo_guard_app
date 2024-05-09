@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../Chat/chat_screen.dart';
 import '../auth/login/login_screen.dart';
 import '../auth/register/register_screen.dart';
 import '../screens/calenders_period.dart';
-import '../screens/contactUs_screen.dart';
 import '../screens/diagnosis.dart';
 import '../screens/help_screen.dart';
 import '../screens/risk_factors_screen.dart';
@@ -164,7 +164,7 @@ class PagesScreen extends StatelessWidget {
             InkWell(
               onTap: () {
                 ///contact us
-                Navigator.of(context).pushNamed(ContactUsScreen.routeName);
+                Navigator.of(context).pushNamed(ChatScreen.routeName);
               },
               child: Padding(
                 padding: const EdgeInsets.all(8.0),

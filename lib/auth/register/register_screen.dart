@@ -1,7 +1,7 @@
 import 'package:facebook/auth/components/custom_text_form_field.dart';
 import 'package:facebook/auth/login/login_screen.dart';
 import 'package:facebook/dialog_utils.dart';
-import 'package:facebook/firebase_utils.dart';
+import 'package:facebook/database_utils.dart';
 import 'package:facebook/models/my_user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -26,151 +26,141 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: PreferredSize(
-        preferredSize: Size.fromHeight(235),
-        child: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.transparent,
-          scrolledUnderElevation: 20,
-          flexibleSpace: Container(
-            child: Stack(
-              children: [
-                Image.asset(
-                  "assets/images/photo_loginRegister.jpg",
-                  fit: BoxFit.cover,
-                ),
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: 120, right: 120, left: 20),
-                  child: Image.asset(
-                    "assets/images/photo_logoGuuard2.jpg",
-                    width: 200,
-                    height: 100,
-                  ),
-                ),
-              ],
-            ),
-          ),
+    return Stack(
+      children: [
+        Container(
+          color: Colors.white,
         ),
-      ),
-      body: Stack(
-        children: [
-          Form(
-            key: formKey,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  CustomTextFormField(
-                    label: 'Full Name',
-                    controller: nameController,
-                    validator: (text) {
-                      if (text == null || text.trim().isEmpty) {
-                        return 'Please enter Full Name';
-                      }
-                      return null;
-                    },
-                  ),
-                  CustomTextFormField(
-                    label: 'Email',
-                    keyboardType: TextInputType.emailAddress,
-                    controller: emailController,
-                    validator: (text) {
-                      if (text == null || text.trim().isEmpty) {
-                        return 'Please enter Email Address';
-                      }
-                      bool emailValid = RegExp(
-                              r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                          .hasMatch(text);
-                      if (!emailValid) {
-                        return 'Please enter a valid Email';
-                      }
-                      return null;
-                    },
-                  ),
-                  CustomTextFormField(
-                    label: 'Address',
-                    keyboardType: TextInputType.text,
-                    controller: addressController,
-                    validator: (text) {
-                      if (text == null || text.trim().isEmpty) {
-                        return 'Please enter your address';
-                      }
-                      return null;
-                    },
-                  ),
-                  CustomTextFormField(
-                    label: 'Password',
-                    keyboardType: TextInputType.number,
-                    controller: passwordController,
-                    obscureText: true,
-                    validator: (text) {
-                      if (text == null || text.trim().isEmpty) {
-                        return 'Please enter Password';
-                      }
-                      if (text.length < 6) {
-                        return 'Password should be at least 6 chars.';
-                      }
-                      return null;
-                    },
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MaterialButton(
-                      elevation: 5.0,
-                      color: Color(0xffF8CAE4),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 17, horizontal: 155),
-                      shape: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: BorderSide.none,
-                      ),
-                      onPressed: () {
-                        register();
-                      },
-                      child: const Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+        Image.asset("assets/images/chatt.png",
+          fit: BoxFit.fill,
+          width: double.infinity,
+        ),
+        Scaffold(
+          backgroundColor: Colors.transparent,
+          appBar: AppBar(
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+          ),
+          body: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 180),
+                child: Form(
+                  key: formKey,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        CustomTextFormField(
+                          label: 'Full Name',
+                          controller: nameController,
+                          validator: (text) {
+                            if (text == null || text.trim().isEmpty) {
+                              return 'Please enter Full Name';
+                            }
+                            return null;
+                          },
                         ),
-                      ),
+                        CustomTextFormField(
+                          label: 'Email',
+                          keyboardType: TextInputType.emailAddress,
+                          controller: emailController,
+                          validator: (text) {
+                            if (text == null || text.trim().isEmpty) {
+                              return 'Please enter Email Address';
+                            }
+                            bool emailValid = RegExp(
+                                r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                .hasMatch(text);
+                            if (!emailValid) {
+                              return 'Please enter a valid Email';
+                            }
+                            return null;
+                          },
+                        ),
+                        CustomTextFormField(
+                          label: 'Address',
+                          keyboardType: TextInputType.text,
+                          controller: addressController,
+                          validator: (text) {
+                            if (text == null || text.trim().isEmpty) {
+                              return 'Please enter your address';
+                            }
+                            return null;
+                          },
+                        ),
+                        CustomTextFormField(
+                          label: 'Password',
+                          keyboardType: TextInputType.number,
+                          controller: passwordController,
+                          obscureText: true,
+                          validator: (text) {
+                            if (text == null || text.trim().isEmpty) {
+                              return 'Please enter Password';
+                            }
+                            if (text.length < 6) {
+                              return 'Password should be at least 6 chars.';
+                            }
+                            return null;
+                          },
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: MaterialButton(
+                            elevation: 5.0,
+                            color: Color(0xffF8CAE4),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 17, horizontal: 155),
+                            shape: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: BorderSide.none,
+                            ),
+                            onPressed: () {
+                              register();
+                            },
+                            child: const Text(
+                              'Sign Up',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Already have an Account?',
+                                  style:
+                                  TextStyle(color: Colors.black54, fontSize: 22),
+                                  textAlign: TextAlign.center,
+                                ),
+                                TextButton(
+                                  onPressed: () {
+                                    ///navigate to register
+                                    Navigator.of(context)
+                                        .pushNamed(LoginScreen.routeName);
+                                  },
+                                  child: Text('Login',
+                                      style: TextStyle(
+                                          color: Color(0xffe13495),
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.bold)),
+                                ),
+                              ]),
+                        ),
+                      ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Already have an Account?',
-                            style:
-                                TextStyle(color: Colors.black54, fontSize: 22),
-                            textAlign: TextAlign.center,
-                          ),
-                          TextButton(
-                            onPressed: () {
-                              ///navigate to register
-                              Navigator.of(context)
-                                  .pushNamed(LoginScreen.routeName);
-                            },
-                            child: Text('Login',
-                                style: TextStyle(
-                                    color: Color(0xffe13495),
-                                    fontSize: 22,
-                                    fontWeight: FontWeight.bold)),
-                          ),
-                        ]),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
@@ -190,7 +180,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           name: nameController.text,
           email: emailController.text,
         );
-        await FirebaseUtils.addUserToFireStore(myUser);
+        await DatabaseUtils.addUserToFireStore(myUser);
 
         ///todo : hide loading
         DialogUtils.hideLoading(context);
